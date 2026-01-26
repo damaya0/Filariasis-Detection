@@ -1,0 +1,21 @@
+# --- Data & Large Files ---
+data/images/
+workspace/             # Contains heavy training checkpoints and TFRecords
+*.csv                  # Optional: Ignore CSVs if they contain private patient data
+
+# --- Virtual Environment ---
+tf_env/
+venv/
+__pycache__/
+*.pyc
+
+# --- TensorFlow Models Repo ---
+# Since 'models' is a huge cloned repo, it's often cleaner to ignore it
+# and just have your setup script re-clone it, OR add it as a submodule.
+# For simplicity, we ignore it here so your upload is fast.
+models/
+
+# --- IDE Settings ---
+.vscode/
+.idea/
+*.swp
