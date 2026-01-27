@@ -1,7 +1,8 @@
 # --- Data & Large Files ---
 data/images/
-workspace/             # Contains heavy training checkpoints and TFRecords
-*.csv                  # Optional: Ignore CSVs if they contain private patient data
+debug_output/
+debug_output_v2/
+workspace/
 
 # --- Virtual Environment ---
 tf_env/
