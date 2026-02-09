@@ -22,7 +22,7 @@ DATASETS = [
     },
     {
         "name": "Wuchereria",
-        "csv": os.path.join(DATA_DIR, 'Wuchereria_Coordinates.csv'), 
+        "csv": os.path.join(DATA_DIR, 'Wuchereria_coordinates.csv'), 
         "img_dir": os.path.join(IMG_BASE_DIR, 'wuchereria'),
     }
 ]
@@ -33,7 +33,6 @@ def transform_coordinate(val, axis_size):
     Args:
         val: The coordinate from CSV (0-255)
         axis_size: The actual width or height of the image
-        flip: Boolean, whether to flip the axis (for Y-axis)
     """
     # 1. Normalize (0 to 1)
     normalized = val / 255.0
@@ -41,6 +40,8 @@ def transform_coordinate(val, axis_size):
     # 2. Scale to actual size
     scaled = normalized * axis_size
     
+    # --- FIX WAS ADDED HERE ---
+    return int(scaled)
 
 def save_debug_samples(dataset_info, num_samples=5, padding=15):
     if not os.path.exists(dataset_info['csv']):
@@ -48,31 +49,39 @@ def save_debug_samples(dataset_info, num_samples=5, padding=15):
         return
 
     df = pd.read_csv(dataset_info['csv'])
+    
+    # Handle cases where CSV has fewer rows than requested samples
     n = min(num_samples, len(df))
+    if n == 0:
+        print(f"CSV {dataset_info['name']} is empty.")
+        return
+        
     sample_rows = df.sample(n=n)
 
     print(f"--- Processing {dataset_info['name']} ---")
 
     for index, row in sample_rows.iterrows():
-        img_name = row['image_name']
+        # Clean the filename (remove accidental spaces)
+        img_name = str(row['image_name']).strip()
         img_path = os.path.join(dataset_info['img_dir'], img_name)
 
         if not os.path.exists(img_path):
+            print(f"Image not found: {img_path}")
             continue
 
         image = cv2.imread(img_path)
         if image is None:
+            print(f"Could not load: {img_path}")
             continue
             
         # Get actual image dimensions
         h_actual, w_actual, _ = image.shape
 
         # --- TRANSFORM COORDINATES ---
-        # X: Scale only
+        # Scale both X and Y directly (Top-Left Origin)
         x1 = transform_coordinate(row['end1_x'], w_actual)
         x2 = transform_coordinate(row['end2_x'], w_actual)
         
-        # Y: Scale AND Flip (because CSV is bottom-left, Image is top-left)
         y1 = transform_coordinate(row['end1_y'], h_actual)
         y2 = transform_coordinate(row['end2_y'], h_actual)
 
