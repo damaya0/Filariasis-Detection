@@ -1,5 +1,5 @@
 # --- Data & Large Files ---
-data/
+data/images/
 debug_output/
 debug_output_multi_worm/
 debug_output_brugia_scaled/
