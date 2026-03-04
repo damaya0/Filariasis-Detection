@@ -1,11 +1,13 @@
 # --- Data & Large Files ---
-data/images/
+data/
 debug_output/
-debug_output_v2/
+debug_output_multi_worm/
+debug_output_brugia_scaled/
 workspace/
 
 # --- Virtual Environment ---
 tf_env/
+myenv/
 venv/
 __pycache__/
 *.pyc
